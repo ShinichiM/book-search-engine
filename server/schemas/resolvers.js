@@ -34,12 +34,15 @@ const resolvers = {
         },
         saveBook: async (parent, { userID, body }, context) => {
             // console.log('THIS IS THE CONTXT: ', context.user);
-            const updatedUser = await User.findOneAndUpdate(
-                { _id: userID },
-                { $addToSet: { savedBooks: body }},
-                { new: true, runValidators: true }
-            );
-            return updatedUser;
+            console.log(context.user._id);
+            if (context.user) {
+                return await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $addToSet: { savedBooks: body }},
+                    { new: true, runValidators: true }
+                );
+            }
+            throw new AuthenticationError('Not Logged In');
         }
     }
 };

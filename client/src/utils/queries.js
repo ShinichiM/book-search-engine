@@ -1,1 +1,10 @@
-import {} from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
+
+export const GET_USER = gql`
+    query user {
+        _id
+        username
+        bookCount
+        savedBooks
+    }
+`;

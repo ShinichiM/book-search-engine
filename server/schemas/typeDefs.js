@@ -26,7 +26,7 @@ const typeDefs = gql`
       description: String
       title: String
       bookId: String 
-      link: String
+      image: String
   }
 
   type Query {

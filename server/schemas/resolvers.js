@@ -4,10 +4,11 @@ const { signToken } = require('../utils/auth')
 
 const resolvers = {
     Query: {
-        user: async (parent, { username, _id }, context) => {
-            return User.findOne({ _id: context.user._id })
+        user: async (parent, { username }, context) => {
+            // console.log(context.user._id);
+            return await User.findOne( { _id: context.user._id } )
                 .select('-__v -password')
-                .populate('savedBooks');
+                .populate('savedBooks')
         }
     },
     Mutation: {
@@ -32,8 +33,21 @@ const resolvers = {
             const token = signToken(user);
             return { user, token };
         },
-        saveBook: async (parent, { input }, context) => {
+        saveBook: async (parent, args, context) => {
+            /*
+           {
+               input: {
+                   authors: [strings]
+                   description: string
+                   bookId: ID
+                   link: string
+                   title: string
+               }
+           } 
+            
+            */
             // console.log(context.user._id);
+            const input = args.input;
             if (context.user) {
                 return await User.findOneAndUpdate(
                     { _id: context.user._id },

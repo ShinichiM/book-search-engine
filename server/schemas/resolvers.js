@@ -32,13 +32,13 @@ const resolvers = {
             const token = signToken(user);
             return { user, token };
         },
-        saveBook: async (parent, { BookInput }, context) => {
+        saveBook: async (parent, { input }, context) => {
             // console.log(context.user._id);
             if (context.user) {
                 return await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $addToSet: { savedBooks: BookInput }},
-                    { new: true, runValidators: true }
+                    { $addToSet: { savedBooks: { ...input } } },
+                    { new: true,  }
                 );
             }
             throw new AuthenticationError('Not Logged In');

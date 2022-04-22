@@ -102,7 +102,7 @@ const SearchBooks = () => {
         variables:  { input: { ...bookToSave } },
       });
 
-      console.log(data);
+      // console.log(data);
       // console.log(searchedBooks)
       // console.log(savedBookIds);
       // if (!response.ok) {

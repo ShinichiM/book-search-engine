@@ -15,96 +15,49 @@ import { removeBookId } from "../utils/localStorage";
 import { GET_USER } from "../utils/queries";
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState({});
-
-  const [getUser, { getUserError }] = useQuery(GET_USER);
+  const { loading, data } = useQuery(GET_USER);
 
   const [removeBook, { bookError }] = useMutation(REMOVE_BOOK, {
-    update(cache, { data: { removeBook }}) {
-      try {
-        const { savedBooks } = cache.readQuery({ query: GET_USER });
-
-        cache.evict({
-          query: GET_USER,
-          data: { savedBooks: [removeBook]}
-        })
-      } catch(e) {
-        console.log(e)
-      }
-    }
+    // update(cache, { data: { removeBook } }) {
+    //   try {
+    //     const { savedBooks } = cache.readQuery({ query: GET_USER });
+    //     cache.evict({
+    //       query: GET_USER,
+    //       data: { savedBooks: [removeBook] },
+    //     });
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // },
   });
-  // use this to determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-        if (!token) {
-          return false;
-        }
-
-        // const response = await getMe(token);
-        try {
-          const { data } = await getUser();
-          const { savedBooks } = data.user;
-          console.log(savedBooks)
-          setUserData({ ...savedBooks });
-        } catch {
-          console.log(getUserError);
-        }
-
-        // if (!response.ok) {
-        //   throw new Error('something went wrong!');
-        // }
-        // const user = await response.json();
-        // setUserData(user);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getUserData();
-  }, [userDataLength]);
+  const userData = data?.user || [];
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
     if (!token) {
       return false;
     }
-
     try {
-      // const response = await deleteBook(bookId, token);
       try {
         const { data } = await removeBook(bookId);
-        // const { } = data.saveBook;
-        setUserData(...data.saveBook);
         removeBookId(bookId);
       } catch {
         console.log(bookError);
       }
-
-      // if (!response.ok) {
-      //   throw new Error('something went wrong!');
-      // }
-
-      // const updatedUser = await response.json();
-      // setUserData(updatedUser);
-      // upon success, remove book's id from localStorage
-      // removeBookId(bookId);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // if data isn't here yet, say so
-  if (!userDataLength) {
+  if (loading) {
     return <h2>LOADING...</h2>;
   }
 
+  // if(!userData.length) {
+  //   return <h2>Loading...</h2>
+  // }
   return (
     <>
       <Jumbotron fluid className="text-light bg-dark">

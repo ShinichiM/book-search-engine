@@ -36,19 +36,6 @@ const resolvers = {
       return { user, token };
     },
     saveBook: async (parent, args, context) => {
-      /*
-           {
-               input: {
-                   authors: [strings]
-                   description: string
-                   bookId: ID
-                   link: string
-                   title: string
-               }
-           } 
-            
-            */
-      // console.log(context.user._id);
       const input = args.input;
       if (context.user) {
         return await User.findOneAndUpdate(
@@ -59,6 +46,18 @@ const resolvers = {
       }
       throw new AuthenticationError("Not Logged In");
     },
+    removeBook: async (parent, { bookId }, context) => {
+      if (context.user) {
+        console.log(bookId);
+        console.log(context.user._id)
+        return await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { savedBooks: { bookId: bookId } } },
+          { new: true }
+        )
+      }
+      throw new AuthenticationError("Not Logged In");
+    }
   },
 };
 

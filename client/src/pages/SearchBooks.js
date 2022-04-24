@@ -12,9 +12,8 @@ import {
 import { useMutation } from "@apollo/client";
 import { SAVE_BOOK } from "../utils/mutations";
 import Auth from "../utils/auth";
-import { saveBook, searchGoogleBooks } from "../utils/API";
+import { searchGoogleBooks } from "../utils/API";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
-import { GET_USER } from "../utils/queries";
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -24,25 +23,7 @@ const SearchBooks = () => {
   const [searchInput, setSearchInput] = useState("");
 
   // setup mutation hooks to handle SAVE_BOOK functionality
-  const [saveBook, { error }] = useMutation(SAVE_BOOK, {
-    // update(cache, { data: { saveBook } }) {
-    //   try {
-    //     const { savedBooks } = cache.readQuery({ query: GET_USER });
-
-    //     cache.writeQuery({
-    //       query: GET_USER,
-    //       data: { savedBooks: [saveBook, ...savedBooks] },
-    //     });
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-    //   const { user } = cache.readQuery({ query: GET_USER });
-    //   cache.writeQuery({
-    //     query: GET_USER,
-    //     data: { user: { ...user, savedBooks: [...user.savedBooks, saveBook] } },
-    //   });
-    // },
-  });
+  const [saveBook, { error }] = useMutation(SAVE_BOOK);
 
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
@@ -88,8 +69,8 @@ const SearchBooks = () => {
   // create function to handle saving a book to our database
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
-    const bookToSave = searchedBooks.find((book) => book.bookId === bookId)
-  
+    const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
+
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -99,18 +80,8 @@ const SearchBooks = () => {
 
     try {
       const { data } = await saveBook({
-        variables:  { input: { ...bookToSave } },
+        variables: { input: { ...bookToSave } },
       });
-
-      // console.log(data);
-      // console.log(searchedBooks)
-      // console.log(savedBookIds);
-      // if (!response.ok) {
-      //   throw new Error("something went wrong!");
-      // }
-
-      // if book successfully saves to user's account, save book id to state
-      // setSavedBookIds([...savedBookIds, bookToSave.bookId]);
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (error) {
       console.error(error);

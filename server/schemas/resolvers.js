@@ -46,10 +46,10 @@ const resolvers = {
       }
       throw new AuthenticationError("Not Logged In");
     },
-    removeBook: async (parent, { bookId }, context) => {
+    removeBook: async (parent, args, context) => {
+      const bookId = args.bookId;
+      console.log(bookId)
       if (context.user) {
-        console.log(bookId);
-        console.log(context.user._id)
         return await User.findOneAndUpdate(
           { _id: context.user._id },
           { $pull: { savedBooks: { bookId: bookId } } },

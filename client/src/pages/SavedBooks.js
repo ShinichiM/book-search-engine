@@ -9,7 +9,6 @@ import {
 
 import { useQuery, useMutation } from "@apollo/client";
 import { REMOVE_BOOK } from "../utils/mutations";
-import { getMe, deleteBook } from "../utils/API";
 import Auth from "../utils/auth";
 import { removeBookId } from "../utils/localStorage";
 import { GET_USER } from "../utils/queries";
@@ -17,19 +16,7 @@ import { GET_USER } from "../utils/queries";
 const SavedBooks = () => {
   const { loading, data } = useQuery(GET_USER);
 
-  const [removeBook, { bookError }] = useMutation(REMOVE_BOOK, {
-    // update(cache, { data: { removeBook } }) {
-    //   try {
-    //     const { savedBooks } = cache.readQuery({ query: GET_USER });
-    //     cache.evict({
-    //       query: GET_USER,
-    //       data: { savedBooks: [removeBook] },
-    //     });
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // },
-  });
+  const [removeBook, { bookError }] = useMutation(REMOVE_BOOK);
 
   const userData = data?.user || [];
 
@@ -40,23 +27,18 @@ const SavedBooks = () => {
       return false;
     }
     try {
-      try {
-        const { data } = await removeBook(bookId);
-        removeBookId(bookId);
-      } catch {
-        console.log(bookError);
-      }
+      const { data } = await removeBook({
+        variables: { bookId: bookId }
+      });
+      console.log(data);
+      removeBookId(bookId);
     } catch (err) {
       console.error(err);
     }
   };
 
   if (loading) {
-    return <h2>LOADING...</h2>;
-  }
-
-  if(loading) {
-    return <h2>Loading...</h2>
+    return <h2>Loading...</h2>;
   }
   return (
     <>

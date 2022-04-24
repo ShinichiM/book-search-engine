@@ -12,29 +12,23 @@ import SearchBooks from "./pages/SearchBooks";
 import SavedBooks from "./pages/SavedBooks";
 import Navbar from "./components/Navbar";
 
-// const httpLink = createHttpLink({
-//   uri: "/graphql",
-// });
+const httpLink = createHttpLink({
+  uri: "/graphql",
+});
 
-// const authLink = setContext((_, { headers }) => {
-//   const token = localStorage.getItem("id_token");
-//   return {
-//     headers: {
-//       ...headers,
-//       authorization: token ? `Bearer ${token}` : "",
-//     },
-//   };
-// });
-
-// const client = new ApolloClient({
-//   uri: authLink.concat(httpLink),
-//   cache: new InMemoryCache(),
-// });
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem("id_token");
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
 
 const client = new ApolloClient({
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
-  uri: "http://localhost:3001/graphql",
-  headers: { authorization: localStorage.getItem("id_token") ? `Bearer ${localStorage.getItem('id_token')}` : '' },
 });
 
 function App() {

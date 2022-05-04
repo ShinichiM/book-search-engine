@@ -73,7 +73,8 @@
 
 
 <p align="center">
-   <img width="75%"  alt="image" src="https://user-images.githubusercontent.com/62361626/166832071-d8460bec-51bc-4f27-898a-4ea46ac7d7df.png">
+  <img width="75%" alt="image" src="https://user-images.githubusercontent.com/62361626/166837143-7ad14407-499b-4c4b-8e0e-800f07555016.png">
+
 </P>
 
 <!-- ABOUT THE PROJECT -->

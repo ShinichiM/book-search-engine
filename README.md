@@ -35,7 +35,7 @@
   <h3 align="center">Book Search Engine</h3>
 
   <p align="center">
-    <a href="https://sm-book-search.herokuapp.com/">View Demo</a>
+    <a href="https://book-search-82e85.web.app/">View Demo</a>
     ·
     <a href="https://github.com/shinichiM/book-search-engine/issues">Report Bug</a>
     ·
